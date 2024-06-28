@@ -1,0 +1,56 @@
+# Create a copy of ds_jobs for transforming
+ds_jobs_transformed = ds_jobs.copy()
+
+
+# Start coding here. Use as many cells as you like!
+
+#Task 1 Modify the data types of the dataframe between categorical, boolean, int and float.
+ds_jobs_transformed['student_id'] = ds_jobs_transformed['student_id'].astype(np.int32)
+ds_jobs_transformed['city_development_index'] = ds_jobs_transformed['city_development_index'].astype(np.float16)
+ds_jobs_transformed['relevant_experience'] = ds_jobs_transformed['relevant_experience'].astype(bool)
+ds_jobs_transformed['training_hours'] = ds_jobs_transformed['training_hours'].astype(np.int32)
+ds_jobs_transformed['job_change'] = ds_jobs_transformed['job_change'].astype(np.bool)
+ds_jobs_transformed['gender'] = ds_jobs_transformed['gender'].astype('category')
+ds_jobs_transformed['city'] = ds_jobs_transformed['city'].astype('category')
+ds_jobs_transformed['major_discipline'] = ds_jobs_transformed['major_discipline'].astype('category')
+ds_jobs_transformed['company_type'] = ds_jobs_transformed['company_type'].astype('category')
+
+
+#task 2
+#Creation of Categorical series in order to create ordered category data type
+#Company size column
+company_size_order2 = ['<10'] + ['10-49','50-99','100-499','500-999','1000-4999','5000-9999']+ ['10000+']
+cat_company_size = pd.CategoricalDtype(categories=company_size_order2, ordered=True)
+ds_jobs_transformed['company_size'] = ds_jobs_transformed['company_size'].astype(cat_company_size)
+
+
+#Creation of Categorical series in order to create ordered category data type
+#enrolled_university column
+university = pd.CategoricalDtype(['no_enrollment','Part time course', 'Full time course'],ordered=True)
+ds_jobs_transformed['enrolled_university'] = ds_jobs_transformed['enrolled_university'].astype(university)
+
+
+#Creation of Categorical series in order to create ordered category data type
+#experience column
+experience_order = ['<1'] + ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20'] + ['>20']
+cat_experience = pd.CategoricalDtype(categories=experience_order, ordered=True)
+ds_jobs_transformed['experience'] = ds_jobs_transformed['experience'].astype(cat_experience)
+
+#Creation of Categorical series in order to create ordered category data type
+#last new job column
+new_job_order = ['never'] + ['1','2','3','4'] + ['>4']
+cat_last_job = pd.CategoricalDtype(categories=new_job_order, ordered=True)
+ds_jobs_transformed['last_new_job'] = ds_jobs_transformed['last_new_job'].astype(cat_last_job)
+
+
+#Creation of Categorical series in order to create ordered category data type
+#Education_level column
+education = pd.CategoricalDtype(['Primary School','High School', 'Graduate','Masters','Phd'],ordered=True)
+ds_jobs_transformed['education_level'] = ds_jobs_transformed['education_level'].astype(education)
+
+#Task 3
+#Filter Dataframe where experience is greater than 10 years and employees(company size column) is at least 1000 employees
+ds_jobs_transformed = ds_jobs_transformed[(ds_jobs_transformed['experience'] >= '10') & (ds_jobs_transformed['company_size'] >= '1000-4999')] 
+
+#drop unused categories
+ds_jobs_transformed['company_size'] = ds_jobs_transformed['company_size'].cat.remove_categories(removals=['<10','10-49','50-99','100-499','500-999'])
